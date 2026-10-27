@@ -1,0 +1,81 @@
+@host = http://localhost:5080
+@email = demo@ballastlane.test
+@password = Demo12345!
+@token = paste-access-token-here
+@taskId = 00000000-0000-0000-0000-000000000000
+
+### Health
+GET {{host}}/health
+
+### Public info
+GET {{host}}/api/public/info
+
+### Register a new account
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "new.user@ballastlane.test",
+  "displayName": "New User",
+  "password": "Password123"
+}
+
+### Login and capture the access token into @token
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### Current profile
+GET {{host}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### List my tasks
+GET {{host}}/api/tasks
+Authorization: Bearer {{token}}
+
+### List my tasks filtered by status
+GET {{host}}/api/tasks?status=InProgress
+Authorization: Bearer {{token}}
+
+### Create a task
+POST {{host}}/api/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Draft the proposal",
+  "description": "First pass for the client review.",
+  "dueDate": "2026-12-01"
+}
+
+### Get one task
+GET {{host}}/api/tasks/{{taskId}}
+Authorization: Bearer {{token}}
+
+### Update a task
+PUT {{host}}/api/tasks/{{taskId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Draft the proposal v2",
+  "description": "Updated scope after the kick-off call.",
+  "dueDate": "2026-12-05"
+}
+
+### Move a task to InProgress
+PATCH {{host}}/api/tasks/{{taskId}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": "InProgress"
+}
+
+### Delete a task
+DELETE {{host}}/api/tasks/{{taskId}}
+Authorization: Bearer {{token}}
